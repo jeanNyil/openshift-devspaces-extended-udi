@@ -13,10 +13,6 @@ RUN wget https://mirror.openshift.com/pub/openshift-v4/clients/camel-k/${KAMEL_V
 RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang.tar \
     -O - | tar -x --strip 2 -C /usr/local/bin jbang/bin/jbang && jbang version
 
-# Install Camel JBang 
-RUN jbang trust add https://github.com/apache/camel/ \
-    && jbang app install camel@apache/camel 
-
 # Copy custom maven settings.xml file to the container
 COPY settings.xml /home/user/.m2/
 
