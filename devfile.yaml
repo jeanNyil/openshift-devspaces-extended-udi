@@ -5,6 +5,13 @@ components:
   - name: tools
     container:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12d
+      env:
+        - name: MAVEN_USER
+          value: ''
+        - name: MAVEN_PASSWORD
+          value: ''
+        - name: MAVEN_URL
+          value: http://localhost:8080/repository
       memoryRequest: 1Gi
       memoryLimit: 3Gi
       cpuLimit: 1000m
