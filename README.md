@@ -26,6 +26,9 @@ components:
   - name: tools
     container:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12
+      env:
+        - name: MAVEN_URL
+          value: https://repo.maven.apache.org/maven2/
       memoryRequest: 1Gi
       memoryLimit: 3Gi
       cpuLimit: 1000m
