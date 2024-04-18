@@ -18,7 +18,7 @@ commands:
       label: "JBang - Trust Apache organization"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "/home/user/.jbang/bin/jbang trust add -o --fresh --quiet jbang trust add https://github.com/apache"
+      commandLine: "/home/user/.jbang/bin/jbang trust add -o --fresh --quiet https://github.com/apache/"
       group:
         kind: build
         isDefault: true
