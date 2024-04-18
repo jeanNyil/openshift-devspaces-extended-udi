@@ -4,15 +4,24 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12e
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12f
       env:
-        - name: MAVEN_USER
-          value: ''
-        - name: MAVEN_PASSWORD
-          value: ''
         - name: MAVEN_URL
           value: https://nexus.apps.ocp4.jnyilimb.eu/repository/maven-public/
       memoryRequest: 1Gi
-      memoryLimit: 3Gi
-      cpuLimit: 1000m
-      cpuRequest: 500m
+      memoryLimit: 4Gi
+      cpuLimit: 4000m
+      cpuRequest: 1000m
+commands:
+  - id: jbang-trust-apache
+    exec:
+      label: "JBang - Trust Apache organization"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "/home/user/.jbang/bin/jbang trust add -o --fresh --quiet jbang trust add https://github.com/apache"
+      group:
+        kind: build
+        isDefault: true
+events:
+  postStart:
+    - jbang-trust-apache
