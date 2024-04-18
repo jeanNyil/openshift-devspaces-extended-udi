@@ -10,7 +10,7 @@
         <mirror>
             <id>all</id>
             <name>Maven Repository Manager</name>
-            <url>${env.MAVEN_URL}</url>
+            <url>${env.MAVEN_URL:https://repo.maven.apache.org/maven2/}</url>
             <mirrorOf>*</mirrorOf>
         </mirror>
     </mirrors>
