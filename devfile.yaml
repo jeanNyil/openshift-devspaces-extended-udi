@@ -13,15 +13,12 @@ components:
       cpuLimit: 4000m
       cpuRequest: 1000m
 commands:
-  - id: jbang-trust-apache
+  - id: install-camel-ci
     exec:
-      label: "JBang - Trust Apache organization"
+      label: "Install Apache Camel JBang"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "/home/user/.jbang/bin/jbang trust add -o --fresh --quiet https://github.com/apache/"
-      group:
-        kind: build
-        isDefault: true
+      commandLine: "jbang trust add -o --fresh https://github.com/apache/ && jbang app install -o --fresh camel@apache/camel"
 events:
   postStart:
-    - jbang-trust-apache
+    - install-camel-cli
