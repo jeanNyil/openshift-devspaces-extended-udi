@@ -13,7 +13,7 @@ components:
       cpuLimit: 4000m
       cpuRequest: 1000m
 commands:
-  - id: install-camel-ci
+  - id: install-camel-cli
     exec:
       label: "Install Apache Camel JBang"
       component: tools
