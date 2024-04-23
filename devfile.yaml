@@ -7,7 +7,7 @@ components:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12f
       env:
         - name: MAVEN_URL
-          value: https://nexus.apps.ocp4.jnyilimb.u/repository/maven-public/
+          value: https://nexus.apps.ocp4.jnyilimb.eu/repository/maven-public/
       memoryRequest: 1Gi
       memoryLimit: 4Gi
       cpuLimit: 4000m
