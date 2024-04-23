@@ -1,6 +1,13 @@
 schemaVersion: 2.2.2
 metadata:
   name: demo-project
+projects:
+  - name: workspace
+    git:
+      remotes:
+        origin: git@bitbucket.org:jnyilimbibi/openshift-devspaces-extended-udi.git
+      checkoutFrom:
+        revision: main
 components:
   - name: tools
     container:
