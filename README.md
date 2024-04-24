@@ -9,8 +9,7 @@ The [`Containerfile`](./Containerfile) included in this repo demostrates how to 
 Build the image and push it to Quay.io:
 
 ```
-podman build -t devspaces-extended-udi .
-podman tag devspaces-extended-udi quay.io/jnyilimbibi/devspaces-extended-udi:3.12
+podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.12 .
 podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.12
 ```
 
