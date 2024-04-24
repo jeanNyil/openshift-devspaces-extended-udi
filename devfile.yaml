@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12f
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12g
       env:
         - name: MAVEN_URL
           value: https://nexus.apps.ocp4.jnyilimb.eu/repository/maven-public/
@@ -18,7 +18,7 @@ commands:
       label: "Install Apache Camel JBang"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o --fresh https://github.com/apache/ && jbang app install -o --fresh camel@apache/camel"
+      commandLine: "jbang trust add -o https://github.com/apache/camel && jbang app install --verbose --fresh /home/user/CamelJBang.java"
 events:
   postStart:
     - install-camel-cli

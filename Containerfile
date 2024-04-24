@@ -15,6 +15,7 @@ RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/j
 
 # Copy custom maven settings.xml file to the container
 COPY settings.xml /home/user/.m2/
+COPY CamelJBang.java /home/user/
 
 RUN for f in "/home/user" "/projects"; do \
       chgrp -R 0 ${f} && \
