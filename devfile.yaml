@@ -18,7 +18,7 @@ commands:
       label: "Install Apache Camel JBang"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o https://github.com/apache/camel && jbang app install --verbose --fresh --name=camel /home/user/CamelJBang.java"
+      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --fresh --name=camel /home/user/CamelJBang.java"
 events:
   postStart:
     - install-camel-cli
