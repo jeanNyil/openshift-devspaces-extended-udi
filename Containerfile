@@ -14,7 +14,6 @@ RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/j
     -O - | tar -x --strip 2 -C /usr/local/bin jbang/bin/jbang && jbang version
 
 # Copy custom maven settings.xml file to the container
-COPY settings.xml /home/user/.m2/
 COPY CamelJBang.java /home/user/
 
 RUN for f in "/home/user" "/projects"; do \
