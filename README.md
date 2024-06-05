@@ -6,32 +6,40 @@ The [`Containerfile`](./Containerfile) included in this repo demostrates how to 
 
 ## Building the Image
 
-Build the image and push it to Quay.io:
+Build the image and push it to Quay.io for instance:
+> **NOTE**: Use the appropriate image repository namespace according to your quay environment.
 
 ```
-podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.12 .
-podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.12
+podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.13 .
+podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.13
 ```
 
 ## Using the New Image
 
 To use this new UDI image in your own workspaces, specify the image location as the `image` in the `tools` component of your **Devfile**.
 
-```
+```yaml
 schemaVersion: 2.2.2
 metadata:
-  name: demo-project
+  name: openshift-devspaces-extended-udi
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.12
-      env:
-        - name: MAVEN_URL
-          value: https://repo.maven.apache.org/maven2/
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.13
       memoryRequest: 1Gi
-      memoryLimit: 3Gi
-      cpuLimit: 1000m
-      cpuRequest: 500m
+      memoryLimit: 4Gi
+      cpuLimit: 4000m
+      cpuRequest: 1000m
+commands:
+  - id: install-camel-cli
+    exec:
+      label: "Install Apache Camel JBang"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java"
+events:
+  postStart:
+    - install-camel-cli
 ```
 
 When your workspace starts up, it will be using your extended UDI image.
