@@ -1,4 +1,4 @@
-FROM registry.redhat.io/devspaces/udi-rhel8:3.13
+FROM registry.redhat.io/devspaces/udi-rhel8:3.14
 
 ENV KAMEL_VERSION=1.10.6
 ENV JBANG_VERSION=0.116.0
