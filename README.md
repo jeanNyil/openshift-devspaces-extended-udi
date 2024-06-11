@@ -10,8 +10,8 @@ Build the image and push it to Quay.io for instance:
 > **NOTE**: Use the appropriate image repository namespace according to your quay environment.
 
 ```
-podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.13 .
-podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.13
+podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.14 .
+podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.14
 ```
 
 ## Using the New Image
@@ -25,9 +25,9 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.13
-      memoryRequest: 1Gi
-      memoryLimit: 4Gi
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.14
+      memoryRequest: 2Gi
+      memoryLimit: 6Gi
       cpuLimit: 4000m
       cpuRequest: 1000m
 commands:
