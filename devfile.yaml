@@ -12,10 +12,10 @@ components:
 commands:
   - id: install-camel-cli
     exec:
-      label: "Install Apache Camel JBang"
+      label: "Install Apache Camel JBang and the Kubernetes plugin"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java"
+      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java && camel plugin add kubernetes"
 events:
   postStart:
     - install-camel-cli
