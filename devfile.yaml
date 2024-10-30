@@ -10,12 +10,19 @@ components:
       cpuLimit: 4000m
       cpuRequest: 1000m
 commands:
-  - id: install-camel-cli-kubernetes-plugin
+  - id: install-camel-cli
     exec:
-      label: "Install Apache Camel JBang and the Kubernetes plugin"
+      label: "Install Apache Camel JBang"
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java && camel plugin add kubernetes"
+  - id: install-camel-cli-kubernetes-plugin
+    exec:
+      label: "Install the Apache Camel JBang Kubernetes plugin"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "camel plugin add kubernetes"
 events:
   postStart:
     - install-camel-cli
+    - install-camel-cli-kubernetes-plugin
