@@ -4,10 +4,7 @@
     "recommendations": [
       "redhat.vscode-quarkus",
       "redhat.apache-camel-extension-pack",
-      "redhat.java",
-      "redhat.vscode-microprofile",
-      "vscjava.vscode-java-debug",
-      "vscjava.vscode-java-test"
+      "redhat.java"
     ]
   }
   
