@@ -12,10 +12,10 @@ components:
 commands:
   - id: install-camel-cli
     exec:
-      label: "Install Apache Camel JBang v4.4.0.redhat-00045"
+      label: "Install Apache Camel JBang v4.4.0"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o https://github.com/apache && jbang app install -Dcamel.jbang.version=4.4.0.redhat-00025 --verbose --name=camel /home/user/CamelJBang.java"
+      commandLine: "jbang trust add -o https://github.com/apache && jbang app install -Dcamel.jbang.version=4.4.0 --verbose --name=camel /home/user/CamelJBang.java"
 events:
   postStart:
     - install-camel-cli
