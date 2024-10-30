@@ -10,7 +10,7 @@ components:
       cpuLimit: 4000m
       cpuRequest: 1000m
 commands:
-  - id: install-camel-cli
+  - id: install-camel-cli-kubernetes-plugin
     exec:
       label: "Install Apache Camel JBang and the Kubernetes plugin"
       component: tools
