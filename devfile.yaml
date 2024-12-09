@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.16
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.17
       memoryRequest: 2Gi
       memoryLimit: 6Gi
       cpuLimit: 4000m
