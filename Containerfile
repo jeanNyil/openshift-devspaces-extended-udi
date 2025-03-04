@@ -1,6 +1,6 @@
-FROM registry.redhat.io/devspaces/udi-rhel8:3.17
+FROM registry.redhat.io/devspaces/udi-rhel9:3.18
 
-ENV JBANG_VERSION=0.121.0
+ENV JBANG_VERSION=0.123.0
 
 USER 0
 
@@ -8,7 +8,7 @@ USER 0
 RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang.tar \
     -O - | tar -x --strip 2 -C /usr/local/bin jbang/bin/jbang && jbang version
 
-# Copy custom maven settings.xml file to the container
+# Copy CamelJBang.java to the container
 COPY CamelJBang.java /home/user/
 
 RUN for f in "/home/user" "/projects"; do \
