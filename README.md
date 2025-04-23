@@ -37,9 +37,16 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java"
+  - id: install-camel-k8s-plugin
+    exec:
+      label: "Install Camel Kubernetes Plugin"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "source ~/.bashrc && camel plugin add kubernetes"
 events:
   postStart:
     - install-camel-cli
+    - install-camel-k8s-plugin
 ```
 
 When your workspace starts up, it will be using your extended UDI image.
