@@ -21,7 +21,7 @@ commands:
       label: "Install Camel Kubernetes Plugin"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "camel plugin add kubernetes"
+      commandLine: "source ~/.bashrc && camel plugin add kubernetes"
 events:
   postStart:
     - install-camel-cli
