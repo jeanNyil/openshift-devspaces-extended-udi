@@ -5,6 +5,11 @@ components:
   - name: tools
     container:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.20
+      env:
+        # For Jbang to use system built-in proxy settings
+        # Reference: https://www.jbang.dev/documentation/guide/latest/configuration.html#proxy-configuration
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.net.useSystemProxies=true"
       memoryRequest: 2Gi
       memoryLimit: 6Gi
       cpuLimit: 4000m
