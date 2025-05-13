@@ -9,9 +9,9 @@ RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/j
     -O - | tar -x --strip 2 -C /usr/local/bin jbang/bin/jbang && jbang version
 
 # Copy CamelJBang.java to the container
-COPY CamelJBang.java /home/user/
+COPY CamelJBang.java /home/tooling/
 
-RUN for f in "/home/user" "/projects"; do \
+RUN for f in "/home/tooling" "/projects"; do \
       chgrp -R 0 ${f} && \
       chmod -R g=u ${f}; \
     done

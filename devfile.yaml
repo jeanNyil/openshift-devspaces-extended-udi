@@ -20,7 +20,7 @@ commands:
       label: "Install Apache Camel JBang"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/user/CamelJBang.java"
+      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/tooling/CamelJBang.java"
   - id: install-camel-k8s-plugin
     exec:
       label: "Install Camel Kubernetes Plugin"
