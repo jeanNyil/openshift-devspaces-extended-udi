@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.20
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.21
       env:
         # For Jbang to use system built-in proxy settings
         # Reference: https://www.jbang.dev/documentation/guide/latest/configuration.html#proxy-configuration
