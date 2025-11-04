@@ -1,6 +1,6 @@
 FROM registry.redhat.io/devspaces/udi-rhel9:3.24
 
-ENV JBANG_VERSION=0.126.1
+ENV JBANG_VERSION=0.132.1
 
 USER 0
 
