@@ -3,8 +3,7 @@
     // for the documentation about the extensions.json format
     "recommendations": [
       "redhat.vscode-quarkus",
-      "redhat.apache-camel-extension-pack",
-      "redhat.java"
+      "redhat.apache-camel-extension-pack"
     ]
   }
   
