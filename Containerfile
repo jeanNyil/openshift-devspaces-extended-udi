@@ -1,6 +1,6 @@
-FROM registry.redhat.io/devspaces/udi-rhel9:3.26.1
+FROM registry.redhat.io/devspaces/udi-rhel9:3.30
 
-ENV JBANG_VERSION=0.132.1
+ENV JBANG_VERSION=0.141.0
 
 USER 0
 
@@ -16,5 +16,5 @@ RUN for f in "/home/tooling" "/projects"; do \
       chmod -R g=u ${f}; \
     done
 
-WORKDIR /projects
+# WORKDIR /projects
 CMD tail -f /dev/null
