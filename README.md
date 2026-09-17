@@ -22,14 +22,6 @@ To use this new UDI image in your own workspaces, specify the image location as 
 schemaVersion: 2.2.2
 metadata:
   name: openshift-devspaces-extended-udi
-attributes:
-  .vscode/extensions.json: |
-    {
-      "recommendations": [
-        "redhat.vscode-quarkus",
-        "redhat.apache-camel-extension-pack"
-      ]
-    }
 components:
   - name: tools
     container:
