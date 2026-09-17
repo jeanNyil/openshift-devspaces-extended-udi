@@ -26,10 +26,22 @@ components:
   - name: tools
     container:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.30
-      memoryRequest: 2Gi
-      memoryLimit: 6Gi
+      env:
+        # For Jbang to use system built-in proxy settings
+        # Reference: https://www.jbang.dev/documentation/guide/latest/configuration.html#proxy-configuration
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.net.useSystemProxies=true"
+        # UDI entrypoint selects the default JDK via env vars (first match wins):
+        #   USE_JAVA8=true  -> Java 8
+        #   USE_JAVA11=true -> Java 11
+        #   USE_JAVA21=true -> Java 21
+        #   (none set)      -> Java 17 (default)
+        - name: USE_JAVA21
+          value: "true"
+      memoryRequest: 8Gi
+      memoryLimit: 8Gi
       cpuLimit: 4000m
-      cpuRequest: 1000m
+      cpuRequest: 500m
 commands:
   - id: install-camel-cli
     exec:
