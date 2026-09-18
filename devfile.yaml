@@ -30,10 +30,11 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
-        export PATH="${HOME}/.jbang/bin:/usr/local/bin:${PATH}"
-        jbang trust add -o https://github.com/apache
-        jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
-        camel plugin add kubernetes
+        export JAVA_HOME="${JAVA_HOME_21:-/usr/lib/jvm/java-21-openjdk}"
+        export PATH="${JAVA_HOME}/bin:/usr/local/bin:${HOME}/.jbang/bin:${PATH}"
+        /usr/local/bin/jbang trust add -o https://github.com/apache
+        /usr/local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
+        "${HOME}/.jbang/bin/camel" plugin add kubernetes
 events:
   postStart:
     - install-camel-cli-and-k8s-plugin
