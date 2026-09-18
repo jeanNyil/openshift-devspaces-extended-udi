@@ -13,7 +13,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
   - `redhat.vscode-quarkus`
   - `redhat.apache-camel-extension-pack`
 
-The [`Containerfile`](./Containerfile) installs JBang and copies `CamelJBang.java` into the image. Workspace env vars, resource limits, and Camel CLI setup live in [`devfile.yaml`](./devfile.yaml).
+The [`Containerfile`](./Containerfile) installs JBang and copies `CamelJBang.java` into the image. Install steps run as root (`USER 0`); the image default is then restored to `USER 10001` to match the official UDI. Dev Spaces sets `runAsNonRoot: true` on workspace containers without an explicit `runAsUser`, so kubelet uses the image `USER` — leaving `USER 0` causes `CreateContainerConfigError` (`runAsUser breaks non-root policy`) on `init-persistent-home`. Workspace env vars, resource limits, and Camel CLI setup live in [`devfile.yaml`](./devfile.yaml).
 
 ## Building the Image
 

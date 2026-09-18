@@ -16,5 +16,9 @@ RUN for f in "/home/tooling" "/projects"; do \
       chmod -R g=u ${f}; \
     done
 
+# Match official UDI runtime user. Leaving USER 0 makes Dev Spaces
+# init-persistent-home fail: runAsNonRoot vs image USER 0.
+USER 10001
+
 # WORKDIR /projects
 CMD tail -f /dev/null
