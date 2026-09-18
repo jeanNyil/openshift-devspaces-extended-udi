@@ -8,7 +8,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
 - [JBang](https://www.jbang.dev/) `0.141.0`
 - [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
 - Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI default is Java 17)
-- Devfile `postStart` events that install the Camel CLI and the Camel Kubernetes plugin
+- One Devfile `postStart` command (`install-camel-cli-and-k8s-plugin`) that installs the Camel CLI and Kubernetes plugin without relying on `~/.bashrc` (sets `PATH` to include `${HOME}/.jbang/bin`)
 - Recommended VS Code extensions from [`.vscode/extensions.json`](./.vscode/extensions.json):
   - `redhat.vscode-quarkus`
   - `redhat.apache-camel-extension-pack`
@@ -57,22 +57,19 @@ components:
       cpuLimit: 4000m
       cpuRequest: 100m
 commands:
-  - id: install-camel-cli
+  - id: install-camel-cli-and-k8s-plugin
     exec:
-      label: "Install Apache Camel JBang"
+      label: "Install Apache Camel JBang and Kubernetes plugin"
       component: tools
       workingDir: ${PROJECT_SOURCE}
-      commandLine: "jbang trust add -o https://github.com/apache && jbang app install --verbose --name=camel /home/tooling/CamelJBang.java"
-  - id: install-camel-k8s-plugin
-    exec:
-      label: "Install Camel Kubernetes Plugin"
-      component: tools
-      workingDir: ${PROJECT_SOURCE}
-      commandLine: "source ~/.bashrc && camel plugin add kubernetes"
+      commandLine: |
+        export PATH="${HOME}/.jbang/bin:/usr/local/bin:${PATH}"
+        jbang trust add -o https://github.com/apache
+        jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
+        camel plugin add kubernetes
 events:
   postStart:
-    - install-camel-cli
-    - install-camel-k8s-plugin
+    - install-camel-cli-and-k8s-plugin
 ```
 
-When your workspace starts up, it will use the extended UDI image, Java 21, and the Camel CLI installed by the `postStart` commands.
+When your workspace starts up, it will use the extended UDI image, Java 21, and the Camel CLI and Kubernetes plugin installed by the `postStart` command.
