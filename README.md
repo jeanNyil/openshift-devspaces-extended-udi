@@ -7,8 +7,9 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
 - Base image: [`registry.redhat.io/devspaces/udi-rhel9:3.30`](https://catalog.redhat.com/software/containers/devspaces/udi-rhel9)
 - [JBang](https://www.jbang.dev/) `0.141.0`
 - [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
-- Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI default is Java 17)
-- One Devfile `postStart` command (`install-camel-cli-and-k8s-plugin`) that installs the Camel CLI and Kubernetes plugin without relying on `~/.bashrc`. It pins `JAVA_HOME` to the RPM JDK (`JAVA_HOME_21` / `/usr/lib/jvm/java-21-openjdk`) so `jbang` does not use `/home/user/.java/current` during the UDI entrypoint race, sets `HOME=/home/user` and `-Duser.home` so JBang/Maven do not write to `/root/.m2` when the pod runs as UID 0, and puts `${HOME}/.jbang/bin` on `PATH`.
+- Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI entrypoint sets `JAVA_HOME=/home/user/.java/current`; UDI default without this is Java 17)
+- Component `JAVA_TOOL_OPTIONS` with `-Djava.net.useSystemProxies=true` and `-Duser.home=/home/user` so every JVM (JBang, Camel, Maven) uses a writable home when the pod runs as userns uid 0 (JVM would otherwise pick `/root`)
+- One Devfile `postStart` command (`install-camel-cli-and-k8s-plugin`) that installs the Camel CLI and Kubernetes plugin, then symlinks `camel` into `${HOME}/.local/bin` (already on the UDI `PATH`). postStart exports are not inherited by later terminals, so env and PATH fixes live on the component / symlink instead of `export` in the script
 - Recommended VS Code extensions from [`.vscode/extensions.json`](./.vscode/extensions.json):
   - `redhat.vscode-quarkus`
   - `redhat.apache-camel-extension-pack`
@@ -41,10 +42,12 @@ components:
     container:
       image: quay.io/jnyilimbibi/devspaces-extended-udi:3.30
       env:
-        # For Jbang to use system built-in proxy settings
+        # Proxy + user.home for all JVMs (JBang/Camel/Maven). Nested-container
+        # workspaces run as userns uid 0, so the JVM default user.home=/root
+        # while HOME=/home/user; /root is not writable.
         # Reference: https://www.jbang.dev/documentation/guide/latest/configuration.html#proxy-configuration
         - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.useSystemProxies=true"
+          value: "-Djava.net.useSystemProxies=true -Duser.home=/home/user"
         # UDI entrypoint selects the default JDK via env vars (first match wins):
         #   USE_JAVA8=true  -> Java 8
         #   USE_JAVA11=true -> Java 11
@@ -63,17 +66,20 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
-        export HOME=/home/user
-        export JAVA_HOME="${JAVA_HOME_21:-/usr/lib/jvm/java-21-openjdk}"
-        export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Duser.home=${HOME}"
-        mkdir -p "${HOME}/.m2" "${HOME}/.jbang/bin"
-        export PATH="${JAVA_HOME}/bin:/usr/local/bin:${HOME}/.jbang/bin:${PATH}"
         /usr/local/bin/jbang trust add -o https://github.com/apache
         /usr/local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
+        mkdir -p "${HOME}/.local/bin"
+        ln -sfn "${HOME}/.jbang/bin/camel" "${HOME}/.local/bin/camel"
         "${HOME}/.jbang/bin/camel" plugin add kubernetes
 events:
   postStart:
     - install-camel-cli-and-k8s-plugin
 ```
 
-When your workspace starts up, it will use the extended UDI image, Java 21, and the Camel CLI and Kubernetes plugin installed by the `postStart` command.
+When your workspace starts up, it will use the extended UDI image, Java 21, and the Camel CLI and Kubernetes plugin installed by the `postStart` command. After recreate, verify with:
+
+```bash
+echo "$JAVA_HOME" "$JAVA_TOOL_OPTIONS"
+java -version
+which camel && camel --version
+```
