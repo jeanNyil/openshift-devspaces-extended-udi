@@ -1,6 +1,8 @@
-schemaVersion: 2.2.2
+schemaVersion: 2.3.0
 metadata:
   name: openshift-devspaces-extended-udi
+  displayName: Extended UDI for OpenShift DevSpaces
+  description: Custom Universal Developer Image with JBang, Apache Camel CLI, and Java 21 for OpenShift DevSpaces workspaces.
 components:
   - name: tools
     container:
@@ -20,7 +22,7 @@ components:
       memoryRequest: 8Gi
       memoryLimit: 8Gi
       cpuLimit: 4000m
-      cpuRequest: 500m
+      cpuRequest: 100m
 commands:
   - id: install-camel-cli
     exec:

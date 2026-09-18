@@ -1,12 +1,24 @@
 # Extended Universal Developer Image (UDI) for OpenShift DevSpaces
 
-## Extending UDI
- 
-The [`Containerfile`](./Containerfile) included in this repo demostrates how to extend the official UDI image with extra tooling for Red Hat OpenShift DevSpaces.
+This repository builds a custom Universal Developer Image for Red Hat OpenShift DevSpaces, based on the official UDI and extended for Apache Camel and Quarkus workspaces.
+
+## What this image provides
+
+- Base image: [`registry.redhat.io/devspaces/udi-rhel9:3.30`](https://catalog.redhat.com/software/containers/devspaces/udi-rhel9)
+- [JBang](https://www.jbang.dev/) `0.141.0`
+- [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
+- Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI default is Java 17)
+- Devfile `postStart` events that install the Camel CLI and the Camel Kubernetes plugin
+- Recommended VS Code extensions from [`.vscode/extensions.json`](./.vscode/extensions.json):
+  - `redhat.vscode-quarkus`
+  - `redhat.apache-camel-extension-pack`
+
+The [`Containerfile`](./Containerfile) installs JBang and copies `CamelJBang.java` into the image. Workspace env vars, resource limits, and Camel CLI setup live in [`devfile.yaml`](./devfile.yaml).
 
 ## Building the Image
 
-Build the image and push it to Quay.io for instance:
+Log in to `registry.redhat.io` if needed to pull the base UDI, then build and push to Quay.io (or your registry):
+
 > **NOTE**: Use the appropriate image repository namespace according to your quay environment.
 
 ```
@@ -14,14 +26,16 @@ podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.30 .
 podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.30
 ```
 
-## Using the New Image
+## Using the Image
 
-To use this new UDI image in your own workspaces, specify the image location as the `image` in the `tools` component of your **Devfile**.
+To use this UDI in your own workspaces, set the `image` on the `tools` component of your **Devfile** (this matches [`devfile.yaml`](./devfile.yaml)):
 
 ```yaml
-schemaVersion: 2.2.2
+schemaVersion: 2.3.0
 metadata:
   name: openshift-devspaces-extended-udi
+  displayName: Extended UDI for OpenShift DevSpaces
+  description: Custom Universal Developer Image with JBang, Apache Camel CLI, and Java 21 for OpenShift DevSpaces workspaces.
 components:
   - name: tools
     container:
@@ -41,7 +55,7 @@ components:
       memoryRequest: 8Gi
       memoryLimit: 8Gi
       cpuLimit: 4000m
-      cpuRequest: 500m
+      cpuRequest: 100m
 commands:
   - id: install-camel-cli
     exec:
@@ -61,4 +75,4 @@ events:
     - install-camel-k8s-plugin
 ```
 
-When your workspace starts up, it will be using your extended UDI image.
+When your workspace starts up, it will use the extended UDI image, Java 21, and the Camel CLI installed by the `postStart` commands.
