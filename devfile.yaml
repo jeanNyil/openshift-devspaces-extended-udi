@@ -30,7 +30,10 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
+        export HOME=/home/user
         export JAVA_HOME="${JAVA_HOME_21:-/usr/lib/jvm/java-21-openjdk}"
+        export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Duser.home=${HOME}"
+        mkdir -p "${HOME}/.m2" "${HOME}/.jbang/bin"
         export PATH="${JAVA_HOME}/bin:/usr/local/bin:${HOME}/.jbang/bin:${PATH}"
         /usr/local/bin/jbang trust add -o https://github.com/apache
         /usr/local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java

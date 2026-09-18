@@ -8,7 +8,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
 - [JBang](https://www.jbang.dev/) `0.141.0`
 - [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
 - Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI default is Java 17)
-- One Devfile `postStart` command (`install-camel-cli-and-k8s-plugin`) that installs the Camel CLI and Kubernetes plugin without relying on `~/.bashrc`. It pins `JAVA_HOME` to the RPM JDK (`JAVA_HOME_21` / `/usr/lib/jvm/java-21-openjdk`) so `jbang` does not use `/home/user/.java/current` during the UDI entrypoint race, and puts `${HOME}/.jbang/bin` on `PATH`.
+- One Devfile `postStart` command (`install-camel-cli-and-k8s-plugin`) that installs the Camel CLI and Kubernetes plugin without relying on `~/.bashrc`. It pins `JAVA_HOME` to the RPM JDK (`JAVA_HOME_21` / `/usr/lib/jvm/java-21-openjdk`) so `jbang` does not use `/home/user/.java/current` during the UDI entrypoint race, sets `HOME=/home/user` and `-Duser.home` so JBang/Maven do not write to `/root/.m2` when the pod runs as UID 0, and puts `${HOME}/.jbang/bin` on `PATH`.
 - Recommended VS Code extensions from [`.vscode/extensions.json`](./.vscode/extensions.json):
   - `redhat.vscode-quarkus`
   - `redhat.apache-camel-extension-pack`
@@ -63,7 +63,10 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
+        export HOME=/home/user
         export JAVA_HOME="${JAVA_HOME_21:-/usr/lib/jvm/java-21-openjdk}"
+        export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Duser.home=${HOME}"
+        mkdir -p "${HOME}/.m2" "${HOME}/.jbang/bin"
         export PATH="${JAVA_HOME}/bin:/usr/local/bin:${HOME}/.jbang/bin:${PATH}"
         /usr/local/bin/jbang trust add -o https://github.com/apache
         /usr/local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
