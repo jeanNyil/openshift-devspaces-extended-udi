@@ -4,7 +4,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
 
 ## What this image provides
 
-- Base image: [`registry.redhat.io/devspaces/udi-rhel9:3.30`](https://catalog.redhat.com/software/containers/devspaces/udi-rhel9)
+- Base image: [`registry.redhat.io/devspaces/udi-rhel9:3.31`](https://catalog.redhat.com/software/containers/devspaces/udi-rhel9)
 - [JBang](https://www.jbang.dev/) `0.141.0`
 - [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
 - Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI entrypoint sets `JAVA_HOME=/home/user/.java/current`; UDI default without this is Java 17)
@@ -23,8 +23,8 @@ Log in to `registry.redhat.io` if needed to pull the base UDI, then build and pu
 > **NOTE**: Use the appropriate image repository namespace according to your quay environment.
 
 ```
-podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.30 .
-podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.30
+podman build -t quay.io/jnyilimbibi/devspaces-extended-udi:3.31 .
+podman push quay.io/jnyilimbibi/devspaces-extended-udi:3.31
 ```
 
 ## Using the Image
@@ -40,7 +40,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.30
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.31
       env:
         # Proxy + user.home for all JVMs (JBang/Camel/Maven). Nested-container
         # workspaces run as userns uid 0, so the JVM default user.home=/root

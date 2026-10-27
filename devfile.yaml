@@ -6,7 +6,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.30
+      image: quay.io/jnyilimbibi/devspaces-extended-udi:3.31
       env:
         # Proxy + user.home for all JVMs (JBang/Camel/Maven). Nested-container
         # workspaces run as userns uid 0, so the JVM default user.home=/root
