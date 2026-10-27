@@ -66,8 +66,10 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
-        jbang trust add -o https://github.com/apache
-        jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
+        # Absolute path: the image ENV PATH includes /home/tooling/.local/bin,
+        # but Dev Spaces / kubelet postStart exec may not inherit it.
+        /home/tooling/.local/bin/jbang trust add -o https://github.com/apache
+        /home/tooling/.local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
         mkdir -p "${HOME}/.local/bin"
         ln -sfn "${HOME}/.jbang/bin/camel" "${HOME}/.local/bin/camel"
         "${HOME}/.jbang/bin/camel" plugin add kubernetes
