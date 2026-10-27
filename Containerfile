@@ -1,24 +1,15 @@
 FROM registry.redhat.io/devspaces/udi-rhel9:3.31
 
-ENV JBANG_VERSION=0.141.0
+ENV JBANG_VERSION=0.142.0
+ENV PATH="/home/tooling/.local/bin:${PATH}"
 
-USER 0
+# Install JBang into a user-writable path (no USER 0 / capset needed).
+RUN mkdir -p /home/tooling/.local/bin \
+ && wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang.tar \
+        -O - | tar -x --strip 2 -C /home/tooling/.local/bin jbang/bin/jbang \
+ && jbang version
 
-# Install JBang
-RUN wget https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang.tar \
-    -O - | tar -x --strip 2 -C /usr/local/bin jbang/bin/jbang && jbang version
+# Copy CamelJBang.java; --chown keeps OpenShift arbitrary-UID (10001:0) without chgrp.
+COPY --chown=10001:0 CamelJBang.java /home/tooling/
 
-# Copy CamelJBang.java to the container
-COPY CamelJBang.java /home/tooling/
-
-RUN for f in "/home/tooling" "/projects"; do \
-      chgrp -R 0 ${f} && \
-      chmod -R g=u ${f}; \
-    done
-
-# Match official UDI runtime user. Leaving USER 0 makes Dev Spaces
-# init-persistent-home fail: runAsNonRoot vs image USER 0.
-USER 10001
-
-# WORKDIR /projects
 CMD tail -f /dev/null

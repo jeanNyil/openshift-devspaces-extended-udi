@@ -5,7 +5,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
 ## What this image provides
 
 - Base image: [`registry.redhat.io/devspaces/udi-rhel9:3.31`](https://catalog.redhat.com/software/containers/devspaces/udi-rhel9)
-- [JBang](https://www.jbang.dev/) `0.141.0`
+- [JBang](https://www.jbang.dev/) `0.142.0`
 - [`CamelJBang.java`](./CamelJBang.java) in `/home/tooling` (Camel JBang `4.18.3`, kamelets `4.18.0`)
 - Default workspace JDK **Java 21** via `USE_JAVA21=true` (UDI entrypoint sets `JAVA_HOME=/home/user/.java/current`; UDI default without this is Java 17)
 - Component `JAVA_TOOL_OPTIONS` with `-Djava.net.useSystemProxies=true` and `-Duser.home=/home/user` so every JVM (JBang, Camel, Maven) uses a writable home when the pod runs as userns uid 0 (JVM would otherwise pick `/root`)
@@ -14,7 +14,7 @@ This repository builds a custom Universal Developer Image for Red Hat OpenShift 
   - `redhat.vscode-quarkus`
   - `redhat.apache-camel-extension-pack`
 
-The [`Containerfile`](./Containerfile) installs JBang and copies `CamelJBang.java` into the image. Install steps run as root (`USER 0`); the image default is then restored to `USER 10001` to match the official UDI. Dev Spaces sets `runAsNonRoot: true` on workspace containers without an explicit `runAsUser`, so kubelet uses the image `USER` — leaving `USER 0` causes `CreateContainerConfigError` (`runAsUser breaks non-root policy`) on `init-persistent-home`. Workspace env vars, resource limits, and Camel CLI setup live in [`devfile.yaml`](./devfile.yaml).
+The [`Containerfile`](./Containerfile) installs JBang into `/home/tooling/.local/bin` (on `PATH`) and copies `CamelJBang.java` with `--chown=10001:0`. The build stays non-root (inherits UDI `USER 10001`), so `podman build` works inside restricted Dev Spaces pods without `capset` / `USER 0` failures. Dev Spaces sets `runAsNonRoot: true` on workspace containers without an explicit `runAsUser`, so kubelet uses the image `USER` — do not leave the image as `USER 0` or `init-persistent-home` fails with `CreateContainerConfigError`. Workspace env vars, resource limits, and Camel CLI setup live in [`devfile.yaml`](./devfile.yaml).
 
 ## Building the Image
 
@@ -66,8 +66,8 @@ commands:
       component: tools
       workingDir: ${PROJECT_SOURCE}
       commandLine: |
-        /usr/local/bin/jbang trust add -o https://github.com/apache
-        /usr/local/bin/jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
+        jbang trust add -o https://github.com/apache
+        jbang app install --verbose --name=camel /home/tooling/CamelJBang.java
         mkdir -p "${HOME}/.local/bin"
         ln -sfn "${HOME}/.jbang/bin/camel" "${HOME}/.local/bin/camel"
         "${HOME}/.jbang/bin/camel" plugin add kubernetes
